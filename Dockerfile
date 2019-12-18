@@ -1,18 +1,24 @@
+# Start from the latest slim of Debian stable
 FROM debian:stable-slim
 
+# Shadowsocks environment variables, 
 ENV SS_SERVER 0.0.0.0
 ENV SS_SERVER_PORT 8388
 ENV SS_PASSWORD "barfoo!"
 ENV SS_TIMEOUT 86400
 ENV SS_METHOD chacha20-ietf-poly1305
+# Additional parameters
 ENV SS_ARGS ""
 
+# If upstream sources haven't change for few days, ship the docker imsage update
 ENV FLAG_OUTDATED 0
 COPY scripts/version-check.sh /
 
+# Update software sources
 RUN apt-get update -qq && \
 	apt-get upgrade -y
 
+# Install the packages which be needed
 RUN set -ex && apt-get install --no-install-recommends -y \
 		autoconf \
 		automake \
@@ -25,12 +31,15 @@ RUN set -ex && apt-get install --no-install-recommends -y \
 		git \
 		build-essential
 
+# As Debian 10 (which is stable build for now)'s software sources still use outdated golang package which will fail
+# build later. Change to testing sources Temporarily and use golang-1.13.
 RUN set -ex && cp /etc/apt/sources.list /etc/apt/sources.list.bak && \
 	echo 'deb http://deb.debian.org/debian bullseye main' > /etc/apt/sources.list && apt-get update -qq && \
 	apt-get install --no-install-recommends -y golang ca-certificates && \
 	cp -f /etc/apt/sources.list.bak /etc/apt/sources.list && \
 	rm -rf /var/lib/apt/lists/*
 
+# Build shadowsocks-libev from source
 RUN set -ex && cd /tmp && \
 	git clone --recursive https://github.com/shadowsocks/shadowsocks-libev.git --depth=1 && \
 	cd shadowsocks-libev && \
@@ -40,6 +49,7 @@ RUN set -ex && cd /tmp && \
 	make install && \
 	cd .. && rm -rf shadowsocks-libev
 
+# Build v2ray-plugin from source
 RUN set -ex && cd /tmp && \
 	git clone https://github.com/shadowsocks/v2ray-plugin.git --depth=1 && \
 	cd v2ray-plugin && \
@@ -50,6 +60,7 @@ RUN set -ex && cd /tmp && \
 	cd .. && rm -rf v2ray-plugin && \
 	rm -f /version-check.sh
 
+# Uninstall build tools as we don't need them anymore
 RUN apt-get purge -y \
 		autoconf \
 		automake \
@@ -60,6 +71,7 @@ RUN apt-get purge -y \
 		ca-certificates && \
 	apt-get autoremove -y
 
+# Finally start ss server
 CMD exec ss-server \
 	-s $SS_SERVER \
 	-p $SS_SERVER_PORT \
