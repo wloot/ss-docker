@@ -16,10 +16,10 @@ COPY scripts/version-check.sh /
 
 # Update software sources
 RUN apt-get update -qq && \
-	apt-get upgrade -y
+	apt-get upgrade -y \
 
 # Install the packages which be needed
-RUN set -ex && apt-get install --no-install-recommends -y \
+&& set -ex && apt-get install --no-install-recommends -y \
 		autoconf \
 		automake \
 		libtool \
@@ -29,28 +29,28 @@ RUN set -ex && apt-get install --no-install-recommends -y \
 		libc-ares-dev \
 		libev-dev \
 		git \
-		build-essential
+		build-essential \
 
 # As Debian 10 (which is stable build for now)'s software sources still use outdated golang package which will fail
 # build later. Change to testing sources Temporarily and use golang-1.13.
-RUN set -ex && cp /etc/apt/sources.list /etc/apt/sources.list.bak && \
+&& cp /etc/apt/sources.list /etc/apt/sources.list.bak && \
 	echo 'deb http://deb.debian.org/debian bullseye main' > /etc/apt/sources.list && apt-get update -qq && \
 	apt-get install --no-install-recommends -y golang ca-certificates && \
 	cp -f /etc/apt/sources.list.bak /etc/apt/sources.list && \
-	rm -rf /var/lib/apt/lists/*
+	rm -rf /var/lib/apt/lists/* \
 
 # Build shadowsocks-libev from source
-RUN set -ex && cd /tmp && \
+&& cd /tmp && \
 	git clone --recursive https://github.com/shadowsocks/shadowsocks-libev.git --depth=1 && \
 	cd shadowsocks-libev && \
 	bash /version-check.sh && \
 	./autogen.sh && \
 	./configure --disable-documentation && \
 	make install && \
-	cd .. && rm -rf shadowsocks-libev
+	cd .. && rm -rf shadowsocks-libev \
 
 # Build v2ray-plugin from source
-RUN set -ex && cd /tmp && \
+&& cd /tmp && \
 	git clone https://github.com/shadowsocks/v2ray-plugin.git --depth=1 && \
 	cd v2ray-plugin && \
 	bash /version-check.sh && \
@@ -58,10 +58,10 @@ RUN set -ex && cd /tmp && \
 	go build && \
 	cp v2ray-plugin /usr/local/bin/ && \
 	cd .. && rm -rf v2ray-plugin && \
-	rm -f /version-check.sh
+	rm -f /version-check.sh \
 
 # Uninstall build tools as we don't need them anymore
-RUN apt-get purge -y \
+&& apt-get purge -y \
 		autoconf \
 		automake \
 		libtool \
