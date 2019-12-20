@@ -10,6 +10,15 @@ ENV SS_METHOD chacha20-ietf-poly1305
 # Additional parameters
 ENV SS_ARGS ""
 
+# Kcptun environment variables, 
+ENV KCP_ENABLE 0
+ENV KCP_LISTEN 29900
+ENV KCP_KEY "it's a secrect"
+ENV KCP_CRYPT aes
+ENV KCP_MODE fsat
+# Additional parameters
+ENV KCP_ARGS ""
+
 # If upstream sources haven't change for few days, ship the docker imsage update
 COPY scripts/version-check.sh /
 RUN echo 0 > $HOME/.flag
@@ -59,7 +68,7 @@ RUN apt-get update -qq && \
 	cp v2ray-plugin /usr/local/bin/ && \
 	cd .. && rm -rf v2ray-plugin \
 
-# Build v2ray-plugin from source
+# Build kcptun from source
 && cd /tmp && \
 	git clone https://github.com/xtaci/kcptun.git --depth=1 && \
 	cd kcptun && \
@@ -84,11 +93,5 @@ RUN apt-get update -qq && \
 		ca-certificates && \
 	apt-get autoremove -y
 
-# Finally start ss server
-CMD exec ss-server \
-	-s $SS_SERVER \
-	-p $SS_SERVER_PORT \
-	-k "$SS_PASSWORD" \
-	-m $SS_METHOD \
-	-t $SS_TIMEOUT \
-	$SS_ARGS
+COPY scripts/process.sh process.sh
+CMD bash process.sh
