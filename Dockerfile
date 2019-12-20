@@ -57,8 +57,19 @@ RUN apt-get update -qq && \
 	go get -d && \
 	go build && \
 	cp v2ray-plugin /usr/local/bin/ && \
-	cd .. && rm -rf v2ray-plugin && \
-	rm -f /version-check.sh \
+	cd .. && rm -rf v2ray-plugin \
+
+# Build v2ray-plugin from source
+&& cd /tmp && \
+	git clone https://github.com/xtaci/kcptun.git --depth=1 && \
+	cd kcptun && \
+	bash /version-check.sh && \
+	GO111MODULE=on go get -d github.com/xtaci/kcptun/... && \
+	go build -o kcptun-server -ldflags "-X main.VERSION=$(date -u +%Y%m%d) -s -w" github.com/xtaci/kcptun/server && \
+	cp kcptun-server /usr/local/bin/ && \
+	cd .. && rm -rf kcptun \
+
+&& rm -f /version-check.sh \
 
 # Uninstall build tools as we don't need them anymore
 && apt-get purge -y \
