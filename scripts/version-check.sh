@@ -1,5 +1,7 @@
 #!/bin/bash
 
+FLAG_OUTDATED=$(cat $HOME/.flag)
+
 COMMIT_TIMESTAMP=$(git show -s --format=%ct)
 
 SECONDS_BETWEEN=$(($(date -u +%s) - ${COMMIT_TIMESTAMP}))
@@ -11,7 +13,7 @@ if [[ ${DAYS_SINCE} -ge 5 ]]; then
 	    exit 1
 	fi
 	let FLAG_OUTDATED=FLAG_OUTDATED+1
+	echo ${FLAG_OUTDATED} > $HOME/.flag
 fi
 
-export FLAG_OUTDATED
 exit 0

@@ -11,8 +11,8 @@ ENV SS_METHOD chacha20-ietf-poly1305
 ENV SS_ARGS ""
 
 # If upstream sources haven't change for few days, ship the docker imsage update
-ENV FLAG_OUTDATED 0
 COPY scripts/version-check.sh /
+RUN echo 0 > $HOME/.flag
 
 # Update software sources
 RUN apt-get update -qq && \
@@ -69,7 +69,7 @@ RUN apt-get update -qq && \
 	cp kcptun-server /usr/local/bin/ && \
 	cd .. && rm -rf kcptun \
 
-&& rm -f /version-check.sh \
+&& rm -f /version-check.sh $HOME/.flag \
 
 # Uninstall build tools as we don't need them anymore
 && apt-get purge -y \
