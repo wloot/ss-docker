@@ -4,6 +4,7 @@ services:
   - docker
 
 script:
-  - docker build -t wloot/ss-docker:latest .
+  - docker build -t wloot/ss-docker:latest -t wloot/ss-docker:$(date +%Y%m%d) .
   - echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
   - docker push wloot/ss-docker:latest
+  - docker push wloot/ss-docker:$(date +%Y%m%d)
