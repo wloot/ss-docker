@@ -79,8 +79,9 @@ RUN apt-get update -qq && \
 	cd .. && rm -rf kcptun \
 
 && rm -f /version-check.sh $HOME/.flag \
-# GOPATH is for storaging go mod which may be large
-&& rm -rf $HOME/go \
+# GOPATH is for storaging go mod
+# GOCACHE is for caching during builing
+&& rm -rf $HOME/go $HOME/.cache \
 
 # Uninstall build tools as we don't need them anymore
 && apt-get purge -y \
