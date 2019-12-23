@@ -5,8 +5,8 @@
 docker pull wloot/ss-docker
 
 docker run -d \
--v /root/.acme.sh/example.com:/example.com \
--e SS_ARGS="--plugin v2ray-plugin --plugin-opts server;tls;host=example.com;cert=/example.com/fullchain.cer;key=/example.com/example.com.key" \
+-v <path to .acme.sh>:<user who executed this command>/.acme.sh \
+-e SS_ARGS="--plugin v2ray-plugin --plugin-opts server;tls;host=example.com" \
 -e SS_SERVER_PORT=443 \
 -e SS_PASSWORD="your password" \
 --name=ss-server \
