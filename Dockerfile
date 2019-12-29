@@ -57,7 +57,7 @@ RUN apt-get update -qq && \
 	bash /version-check.sh && \
 	./autogen.sh && \
 	./configure --disable-documentation && \
-	make install && \
+	make && cp src/ss-server /usr/local/bin/ && \
 	cd .. && rm -rf shadowsocks-libev \
 
 # Build v2ray-plugin from source
