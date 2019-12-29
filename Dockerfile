@@ -56,7 +56,7 @@ RUN apt-get update -qq && \
 	cd shadowsocks-libev && \
 	bash /version-check.sh && \
 	./autogen.sh && \
-	./configure --disable-documentation && \
+	./configure --disable-documentation --enable-static && \
 	make install && \
 	cd .. && rm -rf shadowsocks-libev \
 
@@ -90,6 +90,11 @@ RUN apt-get update -qq && \
 		autoconf \
 		automake \
 		libtool \
+		libpcre3-dev \
+		libmbedtls-dev \
+		libsodium-dev \ 
+		libc-ares-dev \
+		libev-dev \
 		git \
 		build-essential \
 		golang \
