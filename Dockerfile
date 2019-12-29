@@ -1,6 +1,8 @@
 # Start from the latest slim of Debian stable
 FROM debian:stable-slim
 
+MAINTAINER "Julian Liu" wlootlxt123@gmail.com
+
 # Shadowsocks environment variables, 
 ENV SS_SERVER 0.0.0.0
 ENV SS_SERVER_PORT 8388
