@@ -90,11 +90,6 @@ RUN apt-get update -qq && \
 		autoconf \
 		automake \
 		libtool \
-		libpcre3-dev \
-		libmbedtls-dev \
-		libsodium-dev \ 
-		libc-ares-dev \
-		libev-dev \
 		git \
 		build-essential \
 		golang \
