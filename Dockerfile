@@ -65,6 +65,8 @@ RUN apt-get update -qq && \
 	git clone https://github.com/shadowsocks/v2ray-plugin.git --depth=1 && \
 	cd v2ray-plugin && \
 	bash /version-check.sh && \
+	git clone https://github.com/v2ray/v2ray-core --depth=1 && \
+	go mod edit -replace=v2ray.com/core=./v2ray-core && \
 	go get -d && \
 	go build && \
 	cp v2ray-plugin /usr/local/bin/ && \
