@@ -3,8 +3,10 @@ os: linux
 services:
   - docker
 
+env: DATED=$(date +%Y%m%d)
+
 script:
-  - docker build -t wloot/ss-docker:latest -t wloot/ss-docker:$(date +%Y%m%d) .
+  - docker build -t wloot/ss-docker:latest -t wloot/ss-docker:$DATED .
   - echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
   - docker push wloot/ss-docker:latest
-  - docker push wloot/ss-docker:$(date +%Y%m%d)
+  - docker push wloot/ss-docker:$DATED
