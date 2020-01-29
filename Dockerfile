@@ -41,12 +41,13 @@ RUN apt-get update -qq && \
 		libev-dev \
 		git \
 		build-essential \
+		ca-certificates \
 
 # As Debian 10 (which is stable build for now)'s software sources still use outdated golang package which will fail
-# build later. Change to testing sources Temporarily and use golang-1.13.
+# build later. Change to backports software source temporarily and use golang v1.13.
 && cp /etc/apt/sources.list /etc/apt/sources.list.bak && \
-	echo 'deb http://deb.debian.org/debian bullseye main' > /etc/apt/sources.list && apt-get update -qq && \
-	apt-get install --no-install-recommends -y golang ca-certificates && \
+	echo 'deb http://deb.debian.org/debian buster-backports main' > /etc/apt/sources.list && apt-get update -qq && \
+	apt-get install --no-install-recommends -y golang && \
 	cp -f /etc/apt/sources.list.bak /etc/apt/sources.list && \
 	rm -rf /var/lib/apt/lists/* \
 
