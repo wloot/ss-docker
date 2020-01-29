@@ -97,7 +97,10 @@ RUN apt-get update -qq && \
 		build-essential \
 		golang \
 		ca-certificates && \
-	apt-get autoremove -y
+	apt-get autoremove -y \
+
+# Clean some caches
+&& rm -rf /var/cache/
 
 COPY scripts/process.sh process.sh
 CMD bash process.sh
