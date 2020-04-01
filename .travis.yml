@@ -10,3 +10,8 @@ script: >
   docker login -u "${DOCKER_USERNAME}" -p "${DOCKER_PASSWORD}" &&
   docker push wloot/ss-docker:latest &&
   docker push wloot/ss-docker:$DATED
+
+notifications:
+  email:
+    on_success: never
+    on_failure: never
